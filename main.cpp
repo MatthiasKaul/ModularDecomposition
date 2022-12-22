@@ -18,7 +18,6 @@ public:
 };
 
 int main(int argc, char const *argv[]) {
-  LOG("TwIntro");
   std::string infile;
 
   srand(time(nullptr));
@@ -27,7 +26,7 @@ int main(int argc, char const *argv[]) {
     G = initGraphFromFile(argv[1]);
   }
   else {
-      G = randomGraph(5000, 450000);
+      G = randomGraph(2000, 2000000);
       G.logToFile("glog.gr");
   }
   auto T = new Timer("Compute FP");
