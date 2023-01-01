@@ -263,7 +263,14 @@ void computeModuleBoundaries(MDT* root){
   root->last = root->children.back()->last;
 }
 
+void dbg(MDT* root){
+  LOG("Node from " << root->first << " to " << root->last)
+  LOG("Cutters: " << root->firstCut << "  " << root->lastCut)
+  for(auto x : root->children) dbg(x);
+}
+
 void computeModuleCuts(MDT* root,  const std::vector<size_t>& fpInv, const std::vector<size_t>& firstCut, const std::vector<size_t>& lastCut){
+
   if(root->firstCut != UNSET && root->lastCut != UNSET) return;
   for(auto r : root->children){
     computeModuleCuts(r, fpInv, firstCut, lastCut);
@@ -284,11 +291,12 @@ void computeModuleCuts(MDT* root,  const std::vector<size_t>& fpInv, const std::
 
   while (it != lastItem) {
     int finalV = (*it)->last;
-    if(fpInv[finalV] < lastCut.size()){
+    auto indexOfFinalV = fpInv[finalV];
+    if(indexOfFinalV < lastCut.size()){
       //INVALID CUTS EXIST, DO CHECK
-
-      if(lastCut[fpInv[finalV]] != NOCUT && fpInv[lastCut[fpInv[finalV]]] > fpInv[maxCut]) maxCut = lastCut[fpInv[finalV]];
-      if(firstCut[fpInv[finalV]] != NOCUT && fpInv[firstCut[fpInv[finalV]]] > fpInv[minCut]) minCut = firstCut[fpInv[finalV]];
+      if(lastCut[indexOfFinalV] != NOCUT && fpInv[lastCut[indexOfFinalV]] > fpInv[maxCut]) maxCut = lastCut[indexOfFinalV];
+      if(firstCut[indexOfFinalV] != NOCUT && fpInv[firstCut[indexOfFinalV]] < fpInv[minCut]) minCut = firstCut[indexOfFinalV];
+    }else{
     }
     it++;
 
@@ -324,6 +332,7 @@ void findDummyNodes(MDT* root, const std::vector<size_t>& fpInv, std::vector<MDT
     findDummyNodes(r, fpInv, toRemove);
   }
   if(root->parent == nullptr) return;
+  if(root->children.size() == 1){toRemove.push_back(root); return;}
   if(fpInv[root->lastCut] <= fpInv[root->last] && fpInv[root->firstCut] >= fpInv[root->first]) return; //Actual Module, shouldn't be supressed.
   toRemove.push_back(root);
 }
@@ -366,11 +375,16 @@ MDT* getModularDecomposition(const Graph& G){
     auto fpInv = invert(fp);
     auto fc = getFirstCut(fp, fpInv, G);
     auto lc = getLastCut(fp, fpInv, G);
-
-
     auto parens = Parenthesize(fp, fpInv, fc, lc);
     auto tree = parensToTree(parens);
     delete parens;
     cleanupTree(tree, fpInv, fc, lc);
+    reportModules(tree, fp, fpInv);
     return tree;
+}
+
+size_t decompositionWidth(MDT* tree){
+  size_t maxWidth = tree->children.size();
+  for(auto x : tree->children) maxWidth = std::max(maxWidth, decompositionWidth(x));
+  return maxWidth;
 }

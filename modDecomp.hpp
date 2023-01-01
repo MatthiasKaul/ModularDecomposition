@@ -25,4 +25,6 @@ struct MDT{ //ModularDecompositionTree
 
 
 MDT* getModularDecomposition(const Graph& G);
+
+size_t decompositionWidth(MDT* tree); //Returns the size of the largest submodule
 #endif

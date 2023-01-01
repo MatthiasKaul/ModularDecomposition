@@ -28,12 +28,13 @@ int main(int argc, char const *argv[]) {
     G = initGraphFromFile(argv[1]);
   }else{
     LOG("Please provide a file name.")
-    G = randomGraph(1000, 500000);
+    G = randomGraph(500, 25000);
   }
 
-  auto T = new Timer("Compute FP");
+  auto T = new Timer("Compute Decomposition tree");
   auto r = getModularDecomposition(G);
   delete T;
+  LOG("Size of largest submodule: " << decompositionWidth(r))
   delete r;
   return 0;
 }
