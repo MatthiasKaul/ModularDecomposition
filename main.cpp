@@ -4,6 +4,8 @@
 #include "log.hpp"
 #include "graph.hpp"
 #include "partitionRefinement.hpp"
+#include "modDecomp.hpp"
+
 
 class Timer {
 private:
@@ -24,15 +26,14 @@ int main(int argc, char const *argv[]) {
   Graph G;
   if(argc == 2){
     G = initGraphFromFile(argv[1]);
+  }else{
+    LOG("Please provide a file name.")
+    G = randomGraph(1000, 500000);
   }
-  else {
-      G = randomGraph(2000, 2000000);
-      G.logToFile("glog.gr");
-  }
+
   auto T = new Timer("Compute FP");
-  auto fp = factorizingPermutation(G);
+  auto r = getModularDecomposition(G);
   delete T;
-  for(auto x : fp) std::cout << x << " ";
-  std::cout << std::endl;
+  delete r;
   return 0;
 }

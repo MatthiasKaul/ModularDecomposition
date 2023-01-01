@@ -230,6 +230,17 @@ void Graph::logToFile(std::string fname) const {
   }
 }
 
+std::vector<size_t> Graph::getNeighbours(size_t v) const{
+  std::vector<size_t> rval = {};
+  for (size_t i = 0; i < numVerts; i++) {
+    if(i == v) continue;
+    if(isBlackEdge(i,v)) rval.push_back(i);
+  }
+  std::sort(rval.begin(), rval.end());
+  return rval;
+}
+
+
 void unpackContractionSequence(std::vector<vx>& cs){
   auto n = cs.size();
   for(int i = n-1; i > 0; i-=2){

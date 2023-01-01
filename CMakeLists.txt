@@ -9,7 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 message (${CMAKE_MODULE_PATH})
 
-set(SOURCE_FILES main.cpp graph.cpp partitionRefinement.cpp)
+set(SOURCE_FILES main.cpp graph.cpp partitionRefinement.cpp modDecomp.cpp)
 
 
 

@@ -65,9 +65,9 @@ void printPartitionSystem(ItemList* items){
 std::vector<ItemList*> getPivot(FactorizingPermutationEnv& env, const Graph& G, const PartitionClass* pivotSet, ItemList* item){
   if(item == nullptr) LOG("WARNING, nullptr item found for pivot");
   std::vector<ItemList*> rval;
-  for (size_t i = 0; i < G.getNumVertices(); i++) {
+  for (auto i : G.getNeighbours(item->item)) {
     if(env.listEntries[i]->parentPartition == nullptr) LOG("WARNING, orphaned item found")
-    if(G.isBlackEdge(item->item, i) && env.listEntries[i]->parentPartition != pivotSet) rval.push_back(env.listEntries[i]);
+    if(env.listEntries[i]->parentPartition != pivotSet) rval.push_back(env.listEntries[i]);
   }
   return rval;
 }

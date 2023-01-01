@@ -37,6 +37,7 @@ public:
   std::pair<vx,vx>  resultingWidth(vx v, vx w) const;
   Graph doBestContraction();
   void logToFile(std::string fname) const;
+  std::vector<size_t> getNeighbours(size_t v) const;
 };
 
 Graph initGraphFromFile(const std::string& fname);
