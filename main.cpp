@@ -28,7 +28,7 @@ int main(int argc, char const *argv[]) {
     G = initGraphFromFile(argv[1]);
   }else{
     LOG("Please provide a file name.")
-    G = randomGraph(500, 25000);
+    G = randomGraph(100, 1500);
   }
 
   auto T = new Timer("Compute Decomposition tree");
@@ -36,5 +36,13 @@ int main(int argc, char const *argv[]) {
   delete T;
   LOG("Size of largest submodule: " << decompositionWidth(r))
   delete r;
+
+  T = new Timer("Greedy Contraction");
+  while (G.getNumVertices()) {
+    G.doBestContraction();
+  }
+
+  delete T;
+
   return 0;
 }
